@@ -1,0 +1,18 @@
+FRUNZA ROXANA, 321CB
+
+	DESIGN PATTERN
+
+	Pentru implementarea temei, am ales sa creezi o clasa abstracta Node in care salvam numele, un caracter reprezentand tipul nodului (A,B,C), un boolean care va fi folosit la serializare, un integer care reprezinta versiunea (1, 2 sau 3), un ID si un integer reprezentand nivelul nodului care ne va ajuta la deserializare. Deoarece modul de salvare a nodurilor adiacente pentru un nivel difera de la o versiune la alta, am creat 3 clase cate una pentru fiecare versiune care extind clasa Node. Aici am implementat functiile de adaugare nod adiacent, stergere nod adiacent si niste functii auxiliare: functie de verificare existenta a unui nod adiacent in colectie, returnarea unui nod adiacent de la un anumit index si calcularea numarului de noduri adiacente. De asemenea, am folosit design pattern-ul Factory pentru a crea mai usor noduri in functie de versiunea data ca parametru
+	Pentru cele trei clasa SET/ARRAY/LIST am ales sa fac cate un wrapper la urmatoarele clase: HashSet, ArrayList si LinkedList. Pentru fiecare din clasa am implementat metodele de adaugare si stergere din colectie, de calculare a numarului de elemente din colectie si de aflare a elementului de pe pozitia index din colectie. Deoarece clasa Hashset nu are o functie de get ca celelalte clase, iar elementele nu sunt intr-o ordine a nume, pentru a intoarce elementul de pe pozitia index dintr-un SET, am folosit forma alternativa a for-ului (acest lucru este posibil pentru ca clasa HashSet implementeaza Iterator) si decrementam index pana ajunge sa fie egal cu 0. De la o rulare la alta, ordinea elementelor dintr-un SET poate fi diferita, insa consider ca acest lucru nu afecteaza corectitudinea temei deoarece vom folosi metoda de getByIndex doar cand dorim sa parcurgem toate nodurile pe rand pentru a vedea daca indeplinesc anumite proprietati si nu ne intereseaza in mod explicit ordinea acestora.
+	Graful nostru efectiv este salvat in clasa Graph care are un ArrayList de noduri, numarul curent de noduri din graf si trei variabile reprezentand cele 3 versiuni pentru tipul A, B si C. Aici am implementan metodele de adaugare nod, stergere nod, adaugare muchie si stergere muchie. Pentru serializare si deserializare am creat o clasa speciala, GraphSerializer, care se ocupa numai cu acest lucru.
+
+	SERIALIZARE
+	Pentru serializarea grafului, am ales parcurgerea in adancime pe care am realizat-o recursiv. Dam ca parametru si o variabila currentLevel pe care o incrementam la fiecare apel pentru a sti numarul de tab-uri care trebuie adaugat la fiecare linie. Dupa ce un nod a fost serializat pentru prima oara, variabila serialized devine true pentru a sti ca nodul a fost tratat si in cazul in care ajungem din noi la acelasi nod sa stim sa scriem tag-ul cu Reference in loc de cel cu Object.
+
+	DESERIALIZARE
+	Pentru deserializare citim linie cu linie si functie de tag-ul pe care il citim, avem doua cazuri:
+	- daca citim Object - inseamna ca trebuie creat un nod nou si adaugat in graf; din linia Object citim tipul si ID-ul nodului; dupa citim urmatoarele doua linii: cu numele nodului si tag-ul <VECTOR>/<SET>/<LIST>.
+	- daca citim Reference - inseamna ca nodul a fost deja creat si trebuie doar sa cream o muchie.
+	In fisierul de serializare am observat ca intre doua noduri adiacente exista o diferenta de doua tab-uri. De aceea, la deserializare cand citesc o linie salvez si numarul de tab-uri in variabila level. Astfel, ca sa creezi muchiile vad ce noduri au diferenta de nivel egala cu 2.
+
+	Am creat si o clasa auxiliara Parser care va prelucra niste siruri de caractere. Ne vor fi utile cand citim din fisierul de deserializare pentru a afla versiunea, tipul, ID-ul si numele nodului.
